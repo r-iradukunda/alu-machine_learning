@@ -1,6 +1,7 @@
 import requests
 
 def get_launches():
+    # Correct API endpoint
     url = "https://api.spacexdata.com/v4/launches"
     response = requests.get(url)
     if response.status_code == 200:
@@ -12,11 +13,19 @@ def get_launches():
 def count_launches_per_rocket(launches):
     rocket_count = {}
     for launch in launches:
-        rocket_name = launch['rocket']['name']
-        if rocket_name in rocket_count:
-            rocket_count[rocket_name] += 1
+        # Extract rocket ID from the launch data
+        rocket_id = launch['rocket']
+        # Fetch rocket details using the rocket ID
+        rocket_url = f"https://api.spacexdata.com/v4/rockets/{rocket_id}"
+        rocket_response = requests.get(rocket_url)
+        if rocket_response.status_code == 200:
+            rocket_name = rocket_response.json()['name']
+            if rocket_name in rocket_count:
+                rocket_count[rocket_name] += 1
+            else:
+                rocket_count[rocket_name] = 1
         else:
-            rocket_count[rocket_name] = 1
+            print(f"Failed to fetch rocket details for rocket ID: {rocket_id}")
     return rocket_count
 
 def sort_rockets(rocket_count):
