@@ -27,4 +27,4 @@ if __name__ == "__main__":
     rocketList = sorted(rocketList, key=lambda kv: kv[1], reverse=True)
     for rocket in rocketList:
         print("{}: {}".format(rocket[0], rocket[1]))
-    
+
